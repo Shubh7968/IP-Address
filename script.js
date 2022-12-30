@@ -46,7 +46,7 @@ function showUserDetails(){
       showPinCodeList(result);
     })
 }
-
+let postOfficeData;
 function showPinCodeList(data){
    
     let url=`https://api.postalpincode.in/pincode/${data.postal}`;
@@ -55,7 +55,8 @@ function showPinCodeList(data){
     .then(response=>response.json())
     .then(json=>{
         console.log("postadetails",json)
-        sessionStorage.setItem("data1", JSON.stringify(json[0].PostOffice));
+        postOfficeData=json[0].PostOffice;
+        console.log("post office data",postOfficeData)
        document.getElementById('pinCodeCount').textContent=json[0].Message;
        
         json[0].PostOffice.forEach(pinCode=>{
@@ -82,17 +83,17 @@ function applyFilter(filterValue){
    
     let data= sessionStorage.getItem("data1")
     let listOfPinCode=document.querySelectorAll('.postalCode')
-    console.log("list",listOfPinCode,data)
+    console.log("list",listOfPinCode,postOfficeData[0].Name)
    
     for (i = 0; i < listOfPinCode.length; i++) {
-        // a = li[i].getElementsByTagName("a")[0];
-        // txtValue = a.textContent || a.innerText;
         console.log("Pin code length",listOfPinCode.length)
+        console.log("post office inside filter",postOfficeData);
+        console.log("cfedeq",postOfficeData[i].Name?.toUpperCase().includes(filterValue)  )
         if(filterValue==""){
             listOfPinCode[i].style.display = "block";
         }
-        else if (data[i].Name?.toUpperCase().indexOf(filterValue) > -1 || data[i]?.BranchType?.toUpperCase().indexOf(filterValue) > -1) {
-        // else if (data[i].Name?.toUpperCase().indexOf(filterValue) > -1 || data[i]?.BranchType?.toUpperCase().indexOf(filterValue) > -1) {
+        else if (postOfficeData[i].Name.includes(filterValue)  || postOfficeData[i]?.BranchType?.toUpperCase().includes(filterValue) ) {
+        
             listOfPinCode[i].style.display = "block";
             console.log("if")
         } else {
@@ -102,18 +103,7 @@ function applyFilter(filterValue){
       }
 
 
-    // console.log(filterValue);
-    
-    // console.log(data);
-    // return data[0].filter(x=>{
-    //     x.BranchType.toLowerCase.indexOf(filterValue)!==-1
-    //     console.log(x)
-    // })
-    // let filteredValueFromData=data.filter(x=>{
-    //     return x.name.includes(filterValue);
-    // })
-    // console.log(filteredValueFromData)
+
 }
 document.addEventListener('DOMContentLoaded',showIpAddress);
 button.addEventListener('click',showUserDetails)
-
